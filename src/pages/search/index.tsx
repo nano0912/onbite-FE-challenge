@@ -1,30 +1,32 @@
 import SearchableLayout from '@/components/searchable-layout';
-import { useRouter } from 'next/router';
 import MovieItem from '@/components/movie-item';
-import dummy from '../../mock/dummy.json';
 import style from './index.module.css';
 import { ReactNode } from 'react';
-import { MovieData } from '@/types';
+import fetchAllMovies from '@/lib/fetch-all-movies';
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 
-const getFilteredMovies = (movies: MovieData[], query: string) => {
-  return movies.filter((movie) =>
-    movie.title.toLowerCase().includes(query.toLowerCase())
-  );
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const q = context.query.q as string;
+
+  const searchMovie = await fetchAllMovies(q);
+
+  return {
+    props: { searchMovie },
+  };
 };
 
-export default function Search() {
-  const router = useRouter();
-  const q = router.query.q as string;
-
-  const filteredMovies = getFilteredMovies(dummy, q);
-
-  if (!filteredMovies.length) {
+export default function Search({
+  searchMovie,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  if (!searchMovie.length) {
     return <div className='no-results'>검색 결과가 없습니다</div>;
   }
 
   return (
     <div className={style.movie_list}>
-      {filteredMovies.map((movie) => (
+      {searchMovie.map((movie) => (
         <MovieItem key={movie.id} {...movie} />
       ))}
     </div>

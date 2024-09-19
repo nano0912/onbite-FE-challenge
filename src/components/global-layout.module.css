@@ -4,8 +4,7 @@
   padding: 0 20px;
 }
 
-.container > header {
-  font-size: 20px;
+.container > header a {
+  text-decoration: none;
   color: rgb(229, 9, 20);
-  cursor: pointer;
 }
