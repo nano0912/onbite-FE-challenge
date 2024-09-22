@@ -5,6 +5,7 @@ import style from './index.module.css';
 import fetchRecoMovies from '@/lib/fetch-reco-movies';
 import fetchAllMovies from '@/lib/fetch-all-movies';
 import { InferGetStaticPropsType } from 'next';
+import Head from 'next/head';
 
 export const getStaticProps = async () => {
   const [recoMovies, allMovies] = await Promise.all([
@@ -14,6 +15,7 @@ export const getStaticProps = async () => {
 
   return {
     props: { recoMovies, allMovies },
+    revalidate: 10,
   };
 };
 
@@ -23,6 +25,15 @@ export default function Home({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
+      <Head>
+        <title>한입 시네마</title>
+        <meta property='og:image' content='/thumnail.png' />
+        <meta property='og:title' content='한입 시네마' />
+        <meta
+          property='og:description'
+          content='한입 시네마에 등록된 영화들을 만나보세요'
+        />
+      </Head>
       <section className={style.section}>
         <h2>지금 가장 추천하는 영화</h2>
         <div className={style.movie_list}>
