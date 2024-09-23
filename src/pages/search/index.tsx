@@ -9,12 +9,20 @@ import Head from 'next/head';
 
 export default function Search() {
   const [searchMovie, setSearchMovie] = useState<MovieData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const q = router.query.q;
 
   const fetchSearchResult = async () => {
-    const data = await fetchAllMovies(q as string);
-    setSearchMovie(data);
+    setIsLoading(true);
+    try {
+      const data = await fetchAllMovies(q as string);
+      setSearchMovie(data);
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -23,8 +31,12 @@ export default function Search() {
     }
   }, [q]);
 
-  if (!searchMovie.length) {
-    return <div className='no-results'>검색 결과가 없습니다</div>;
+  if (isLoading) {
+    return <div>검색중...</div>;
+  }
+
+  if (!isLoading && searchMovie.length === 0) {
+    return <div>검색 결과가 없습니다</div>;
   }
 
   return (
