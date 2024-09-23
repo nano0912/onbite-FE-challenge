@@ -61,7 +61,7 @@ export default function Movie({
   return (
     <>
       <Head>
-        <title>{title} - 한입 시네마</title>
+        <title>{`${title} - 한입 시네마`}</title>
         <meta property='og:image' content={posterImgUrl} />
         <meta property='og:title' content={title} />
         <meta property='og:description' content={description} />
